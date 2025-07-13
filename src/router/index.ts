@@ -37,6 +37,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
+  // Sincronizar usuario desde localStorage antes de validar
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    const parsed = JSON.parse(storedUser)
+    if (!auth.user || auth.user.username !== parsed.username || auth.user.role !== parsed.role) {
+      auth.user = parsed
+    }
+  } else {
+    auth.user = null
+  }
   if (to.meta.requiresAuth) {
     if (!auth.isAuthenticated) {
       return next({ name: 'login-usuario' })
