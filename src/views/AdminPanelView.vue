@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 p-8 relative">
+  <div class="min-h-screen bg-gray-200 p-8 relative">
     <button
       class="absolute top-6 right-8 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
       @click="logout"

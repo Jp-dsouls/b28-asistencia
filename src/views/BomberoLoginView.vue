@@ -1,5 +1,5 @@
 <template>
-  <div class="center-screen">
+  <div class="center-screen bg-gray-200">
     <div class="login-container-2col">
       <div class="login-left">
         <form @submit.prevent="onLogin">
@@ -56,7 +56,6 @@ function onLogin() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f6f5f7;
 }
 
 .login-container-2col {

@@ -115,7 +115,7 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-200">
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
 

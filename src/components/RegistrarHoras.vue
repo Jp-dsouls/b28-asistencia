@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto flex flex-col items-center">
-    <h3 class="text-lg font-bold mb-4">Registrar Horas</h3>
     <button
       class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:opacity-50"
       :disabled="isBlocked"
