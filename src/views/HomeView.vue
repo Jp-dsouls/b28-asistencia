@@ -119,24 +119,25 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
 <template>
   <div class="min-h-screen bg-gray-200">
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <main class="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
 
       <div class="flex flex-col bg-white border-0 rounded-2xl shadow-xl dark:bg-gray-50">
-        <div class="flex p-4 leading-normal items-center gap-2 justify-between">
+        <div
+          class="flex flex-col sm:flex-row p-4 leading-normal items-start sm:items-center gap-3 sm:gap-2 justify-between">
           <div class="flex items-center gap-2">
-            <ShieldCheckIcon class="mt-0 w-12 h-12 text-red-500" />
-            <h5 class="text-2xl font-bold tracking-tight text-gray-900 uppercase">
+            <ShieldCheckIcon class="mt-0 w-8 h-8 sm:w-12 sm:h-12 text-red-500" />
+            <h5 class="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-gray-900 uppercase leading-tight">
               Dashboard de asistencia interna personal B28
             </h5>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
             <button @click="abrirModalBusqueda"
-              class="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2 bg-white hover:bg-gray-100 transition text-gray-700 shadow-sm">
-              <MagnifyingGlassIcon class="w-5 h-5" />
+              class="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 sm:px-4 bg-white hover:bg-gray-100 transition text-gray-700 shadow-sm">
+              <MagnifyingGlassIcon class="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button @click="$router.push('/login-usuario')"
-              class="flex items-center gap-2 border border-blue-500 rounded-xl px-4 py-2 bg-blue-500 hover:bg-blue-600 transition text-white shadow-sm">
-              <UserIcon class="w-5 h-5" />
+              class="flex items-center gap-2 border border-blue-500 rounded-xl px-3 py-2 sm:px-4 bg-blue-500 hover:bg-blue-600 transition text-white shadow-sm">
+              <UserIcon class="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
@@ -179,7 +180,7 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
                 <div class="font-semibold text-gray-900">{{ b.nombre }}</div>
                 <div class="text-xs text-gray-500">{{ b.rango }}</div>
                 <div class="text-xs text-gray-500">{{ b.horasTrabajadas }}h / {{ b.horasRequeridas }}h ({{ b.porcentaje
-                }}%)</div>
+                  }}%)</div>
               </div>
               <span v-if="b.estado === 'Crítico'"
                 class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">Crítico</span>
@@ -263,11 +264,10 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
         </div>
       </div>
 
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <StatCard title="Total Bomberos activos" :value="totalBomberos" :icon="UsersIcon" />
         <StatCard title="Asistencia optima" :value="totalOptimo" bgColor="bg-green-500" />
         <StatCard title="Asistencia regular" :value="totalRegular" bgColor="bg-yellow-500" />
-
         <StatCard title="Asistencia crítica" :value="totalCritico" bgColor="bg-red-500" />
       </div>
       <br>
@@ -277,22 +277,22 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
       <div class="sm:hidden">
         <label for="tabs" class="sr-only">Selecciona una opción</label>
         <select id="tabs" v-model="activeTab"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-2xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
           <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
         </select>
       </div>
 
-      <!-- Tabs para desktop -->
+      <!-- Tabs para tablet y desktop -->
       <ul
-        class="hidden text-sm font-medium text-center text-gray-500 rounded-2xl shadow-xl sm:flex dark:divide-gray-700 dark:text-gray-400 bg-white border border-gray-200"
+        class="hidden sm:flex text-sm font-medium text-center text-gray-500 rounded-xl lg:rounded-2xl shadow-xl dark:divide-gray-700 dark:text-gray-400 bg-white border border-gray-200"
         style="overflow: hidden;">
         <li v-for="tab in tabs" :key="tab.key" class="w-full">
           <button @click="activeTab = tab.key" :class="[
-            'inline-block w-full p-4 uppercase transition',
+            'inline-block w-full p-3 lg:p-4 uppercase transition text-xs lg:text-sm',
             tab.key === 'todos'
-              ? 'rounded-s-lg'
+              ? 'rounded-s-xl lg:rounded-s-2xl'
               : tab.key === 'critico'
-                ? 'rounded-e-lg'
+                ? 'rounded-e-xl lg:rounded-e-2xl'
                 : '',
             activeTab === tab.key
               ? 'bg-gray-100 text-gray-900 font-bold'
@@ -306,22 +306,25 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
       <br />
 
       <!-- Contenido de los tabs -->
-      <div class="flex justify-between gap-4" v-if="activeTab === 'todos'">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" v-if="activeTab === 'todos'">
         <template v-for="b in bomberos" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="inline-flex gap-4" v-else-if="activeTab === 'optimo'">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        v-else-if="activeTab === 'optimo'">
         <template v-for="b in bomberosOptimo" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="inline-flex gap-4" v-else-if="activeTab === 'regular'">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        v-else-if="activeTab === 'regular'">
         <template v-for="b in bomberosRegular" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="inline-flex gap-4" v-else-if="activeTab === 'critico'">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        v-else-if="activeTab === 'critico'">
         <template v-for="b in bomberosCritico" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
