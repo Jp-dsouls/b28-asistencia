@@ -4,6 +4,7 @@ import { ShieldCheckIcon, UserIcon, ClockIcon, MagnifyingGlassIcon } from '@hero
 import { UsersIcon } from '@heroicons/vue/24/solid'
 import StatCard from '../components/StatCard.vue'
 import BomberoCard from '../components/BomberoCard.vue'
+import LogoHeader from '../components/LogoHeader.vue'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -129,12 +130,7 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
       <div class="flex flex-col bg-white border-0 rounded-2xl shadow-xl dark:bg-gray-50">
         <div
           class="flex flex-col sm:flex-row p-4 leading-normal items-start sm:items-center gap-3 sm:gap-2 justify-between">
-          <div class="flex items-center gap-2">
-            <ShieldCheckIcon class="mt-0 w-8 h-8 sm:w-12 sm:h-12 text-red-500" />
-            <h5 class="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-gray-900 uppercase leading-tight">
-              Dashboard de asistencia interna personal B28
-            </h5>
-          </div>
+          <LogoHeader size="md" :show-text="true" />
           <div class="flex gap-2 w-full sm:w-auto justify-center sm:justify-end">
             <button @click="abrirModalBusqueda"
               class="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2 sm:px-4 bg-white hover:bg-gray-100 transition text-gray-700 shadow-sm">
@@ -187,7 +183,7 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
                 <div class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ b.nombre }}</div>
                 <div class="text-xs text-gray-500">{{ b.rango }}</div>
                 <div class="text-xs text-gray-500">{{ b.horasTrabajadas }}h / {{ b.horasRequeridas }}h ({{ b.porcentaje
-                }}%)</div>
+                  }}%)</div>
               </div>
               <span v-if="b.estado === 'Crítico'"
                 class="bg-red-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full flex-shrink-0">Crítico</span>
