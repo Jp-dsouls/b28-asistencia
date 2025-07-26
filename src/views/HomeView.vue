@@ -27,6 +27,7 @@ const activeTab = ref('todos')
 
 const mostrarModalBusqueda = ref(false)
 const mostrarModalDetalle = ref(false)
+const mostrarDropdown = ref(false)
 const busqueda = ref('')
 const bomberoSeleccionado = ref<Bombero | null>(null)
 
@@ -99,6 +100,10 @@ function cerrarModalDetalle() {
   mostrarModalBusqueda.value = false // Cierra también la búsqueda si estuviera abierta
 }
 
+function cerrarDropdown() {
+  mostrarDropdown.value = false
+}
+
 const tabs = [
   { key: 'todos', label: 'todos' },
   { key: 'optimo', label: 'optimo' },
@@ -145,107 +150,110 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
       <br>
 
       <!-- Modal de búsqueda de bombero -->
-      <div v-if="mostrarModalBusqueda" class="fixed inset-0 z-50 flex items-center justify-center"
+      <div v-if="mostrarModalBusqueda" class="fixed inset-0 z-50 flex items-center justify-center p-4"
         style="background: rgba(0, 0, 0, 0.95);">
         <div :class="[
-          'bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative transition-all duration-200',
+          'bg-white rounded-xl lg:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-lg lg:max-w-xl p-4 sm:p-6 relative transition-all duration-200',
           mostrarModalDetalle ? 'opacity-40 blur-sm pointer-events-none select-none' : ''
         ]">
           <button @click="cerrarModalBusqueda"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl">&times;</button>
-          <div class="flex items-center gap-2 mb-2">
-            <MagnifyingGlassIcon class="w-5 h-5 text-gray-500" />
-            <span class="font-semibold text-lg">Buscar Bombero</span>
+            class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-700 text-lg sm:text-xl">&times;</button>
+          <div class="flex items-center gap-2 mb-3">
+            <MagnifyingGlassIcon class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+            <span class="font-semibold text-base sm:text-lg">Buscar Bombero</span>
           </div>
-          <p class="text-gray-500 text-sm mb-2">Ingresa el nombre, rango o departamento del bombero que deseas encontrar
+          <p class="text-gray-500 text-xs sm:text-sm mb-3">Ingresa el nombre, rango o departamento del bombero que
+            deseas encontrar
           </p>
-          <div class="flex items-center border rounded-xl px-2 py-1 mb-2 bg-gray-50">
-            <MagnifyingGlassIcon class="w-5 h-5 text-gray-400" />
+          <div class="flex items-center border rounded-lg sm:rounded-xl px-2 py-2 mb-3 bg-gray-50">
+            <MagnifyingGlassIcon class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             <input v-model="busqueda" type="text" placeholder="Buscar..."
-              class="flex-1 bg-transparent outline-none px-2 py-1 border-0 focus:ring-0 shadow-none" />
+              class="flex-1 bg-transparent outline-none px-2 py-1 border-0 focus:ring-0 shadow-none text-sm sm:text-base" />
             <button v-if="busqueda" @click="busqueda = ''" class="text-gray-400 hover:text-gray-700">&times;</button>
           </div>
-          <div v-if="busqueda && resultadosBusqueda.length === 0" class="text-gray-500 text-sm mt-2">No se encontraron
+          <div v-if="busqueda && resultadosBusqueda.length === 0" class="text-gray-500 text-xs sm:text-sm mt-2">No se
+            encontraron
             resultados.</div>
-          <div v-if="busqueda && resultadosBusqueda.length > 0" class="mt-2">
-            <div class="text-xs text-gray-500 mb-1">{{ resultadosBusqueda.length }} resultado{{
+          <div v-if="busqueda && resultadosBusqueda.length > 0" class="mt-3">
+            <div class="text-xs text-gray-500 mb-2">{{ resultadosBusqueda.length }} resultado{{
               resultadosBusqueda.length > 1 ? 's' : '' }} encontrado{{ resultadosBusqueda.length > 1 ? 's' : '' }}:
             </div>
             <div v-for="b in resultadosBusqueda" :key="b.id" @click="seleccionarBombero(b)"
-              class="flex items-center gap-3 bg-gray-50 hover:bg-gray-100 rounded-xl p-3 mb-2 cursor-pointer border border-gray-200">
-              <span class="bg-gray-100 p-2 rounded-full">
-                <UserIcon class="w-6 h-6 text-gray-500" />
+              class="flex items-center gap-2 sm:gap-3 bg-gray-50 hover:bg-gray-100 rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 cursor-pointer border border-gray-200">
+              <span class="bg-gray-100 p-1.5 sm:p-2 rounded-full flex-shrink-0">
+                <UserIcon class="w-4 h-4 sm:w-6 sm:h-6 text-gray-500" />
               </span>
-              <div class="flex-1">
-                <div class="font-semibold text-gray-900">{{ b.nombre }}</div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-gray-900 text-sm sm:text-base truncate">{{ b.nombre }}</div>
                 <div class="text-xs text-gray-500">{{ b.rango }}</div>
                 <div class="text-xs text-gray-500">{{ b.horasTrabajadas }}h / {{ b.horasRequeridas }}h ({{ b.porcentaje
-                  }}%)</div>
+                }}%)</div>
               </div>
               <span v-if="b.estado === 'Crítico'"
-                class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">Crítico</span>
+                class="bg-red-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full flex-shrink-0">Crítico</span>
               <span v-else-if="b.estado === 'Óptimo'"
-                class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">Óptimo</span>
+                class="bg-green-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full flex-shrink-0">Óptimo</span>
               <span v-else-if="b.estado === 'Regular'"
-                class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full">Regular</span>
+                class="bg-yellow-400 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full flex-shrink-0">Regular</span>
             </div>
           </div>
           <div class="flex justify-end mt-4">
             <button @click="cerrarModalBusqueda"
-              class="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700">Cerrar</button>
+              class="px-3 py-2 sm:px-4 rounded-lg sm:rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm sm:text-base">Cerrar</button>
           </div>
         </div>
       </div>
 
       <!-- Modal de detalle de bombero -->
-      <div v-if="mostrarModalDetalle && bomberoSeleccionado" class="fixed inset-0 z-50 flex items-center justify-center"
-        style="background: rgba(0, 0, 0, 0.10);">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
+      <div v-if="mostrarModalDetalle && bomberoSeleccionado"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0, 0, 0, 0.10);">
+        <div
+          class="bg-white rounded-xl lg:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md lg:max-w-lg p-4 sm:p-6 relative">
           <button @click="cerrarModalDetalle"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl">&times;</button>
-          <div class="flex items-center gap-2 mb-2">
-            <UserIcon class="w-6 h-6 text-gray-500" />
-            <span class="font-semibold text-lg">Información del Bombero</span>
+            class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-700 text-lg sm:text-xl">&times;</button>
+          <div class="flex items-center gap-2 mb-3">
+            <UserIcon class="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
+            <span class="font-semibold text-base sm:text-lg">Información del Bombero</span>
           </div>
-          <div class="font-bold text-lg text-gray-900 mb-1">{{ bomberoSeleccionado.nombre }}</div>
-          <div class="flex items-center gap-2 mb-1">
+          <div class="font-bold text-base sm:text-lg text-gray-900 mb-2">{{ bomberoSeleccionado.nombre }}</div>
+          <div class="flex items-center gap-2 mb-3">
             <span class="bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">{{
               bomberoSeleccionado.grupo }}</span>
-            <span class="text-sm text-gray-500">{{ bomberoSeleccionado.rango }}</span>
+            <span class="text-xs sm:text-sm text-gray-500">{{ bomberoSeleccionado.rango }}</span>
             <span v-if="bomberoSeleccionado.estado === 'Crítico'"
-              class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full ml-auto">Crítico</span>
+              class="bg-red-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full ml-auto">Crítico</span>
             <span v-else-if="bomberoSeleccionado.estado === 'Óptimo'"
-              class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full ml-auto">Óptimo</span>
+              class="bg-green-500 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full ml-auto">Óptimo</span>
             <span v-else-if="bomberoSeleccionado.estado === 'Regular'"
-              class="bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full ml-auto">Regular</span>
+              class="bg-yellow-400 text-white text-xs font-bold px-2 sm:px-3 py-1 rounded-full ml-auto">Regular</span>
           </div>
-          <div class="mt-4 flex gap-4">
-            <div class="flex-1 bg-gray-50 rounded-xl p-3 flex flex-col items-center">
-              <ClockIcon class="w-5 h-5 text-gray-400 mb-1" />
-              <div class="text-xs text-gray-500">Horas Trabajadas</div>
-              <div class="text-xl font-bold text-gray-900">{{ bomberoSeleccionado.horasTrabajadas }}h</div>
+          <div class="mt-4 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div class="flex-1 bg-gray-50 rounded-lg sm:rounded-xl p-3 flex flex-col items-center">
+              <ClockIcon class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mb-1" />
+              <div class="text-xs text-gray-500 text-center">Horas Trabajadas</div>
+              <div class="text-lg sm:text-xl font-bold text-gray-900">{{ bomberoSeleccionado.horasTrabajadas }}h</div>
             </div>
-            <div class="flex-1 bg-gray-50 rounded-xl p-3 flex flex-col items-center">
-              <div class="text-xs text-gray-500 mb-1">Horas Requeridas (trimestral)</div>
-              <div class="text-xl font-bold text-gray-900">{{ bomberoSeleccionado.horasRequeridas }}h</div>
+            <div class="flex-1 bg-gray-50 rounded-lg sm:rounded-xl p-3 flex flex-col items-center">
+              <div class="text-xs text-gray-500 mb-1 text-center">Horas Requeridas (trimestral)</div>
+              <div class="text-lg sm:text-xl font-bold text-gray-900">{{ bomberoSeleccionado.horasRequeridas }}h</div>
             </div>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="text-gray-600 text-sm">Progreso</span>
+            <span class="text-gray-600 text-xs sm:text-sm">Progreso</span>
             <span :class="{
               'text-red-500': bomberoSeleccionado.estado === 'Crítico',
               'text-green-500': bomberoSeleccionado.estado === 'Óptimo',
               'text-yellow-500': bomberoSeleccionado.estado === 'Regular',
               'font-bold': true,
-              'text-sm': true
+              'text-xs sm:text-sm': true
             }">{{ bomberoSeleccionado.porcentaje }}%</span>
           </div>
-          <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1 mb-1">
+          <div class="w-full bg-gray-200 rounded-full h-2 sm:h-2.5 mt-1 mb-2">
             <div :class="{
               'bg-red-500': bomberoSeleccionado.estado === 'Crítico',
               'bg-green-500': bomberoSeleccionado.estado === 'Óptimo',
               'bg-yellow-400': bomberoSeleccionado.estado === 'Regular',
-              'h-2.5': true,
+              'h-2 sm:h-2.5': true,
               'rounded-full': true
             }" :style="{ width: bomberoSeleccionado.porcentaje + '%' }"></div>
           </div>
@@ -253,13 +261,13 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
             'text-red-500': bomberoSeleccionado.estado === 'Crítico',
             'text-green-500': bomberoSeleccionado.estado === 'Óptimo',
             'text-yellow-500': bomberoSeleccionado.estado === 'Regular',
-            'text-sm': true,
+            'text-xs sm:text-sm': true,
             'font-semibold': true,
             'mb-4': true
           }">{{ bomberoSeleccionado.faltantes }}h faltantes para completar</div>
-          <div class="flex justify-end mt-2">
+          <div class="flex justify-end mt-3">
             <button @click="cerrarModalDetalle"
-              class="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700">Cerrar</button>
+              class="px-3 py-2 sm:px-4 rounded-lg sm:rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm sm:text-base">Cerrar</button>
           </div>
         </div>
       </div>
@@ -275,11 +283,33 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
 
       <!-- Tabs para mobile -->
       <div class="sm:hidden">
-        <label for="tabs" class="sr-only">Selecciona una opción</label>
-        <select id="tabs" v-model="activeTab"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</option>
-        </select>
+        <div class="relative">
+          <button @click="mostrarDropdown = !mostrarDropdown"
+            class="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-xl shadow-xl p-3 font-medium uppercase flex items-center justify-between">
+            <span>{{tabs.find(t => t.key === activeTab)?.label}}</span>
+            <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': mostrarDropdown }" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <div v-if="mostrarDropdown"
+            class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-10">
+            <div v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key; mostrarDropdown = false" :class="[
+              'p-3 text-sm font-medium uppercase cursor-pointer transition',
+              tab.key === 'todos' ? 'rounded-t-xl' : '',
+              tab.key === 'critico' ? 'rounded-b-xl' : '',
+              activeTab === tab.key
+                ? 'bg-gray-100 text-gray-900 font-bold'
+                : 'bg-white text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+            ]">
+              {{ tab.label }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Overlay para cerrar dropdown al hacer clic fuera -->
+        <div v-if="mostrarDropdown" @click="cerrarDropdown" class="fixed inset-0 z-5 bg-transparent"></div>
       </div>
 
       <!-- Tabs para tablet y desktop -->
