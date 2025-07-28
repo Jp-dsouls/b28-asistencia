@@ -10,6 +10,7 @@ import LogoHeader from '../components/LogoHeader.vue'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
+
 interface Bombero {
   id: number
   nombre: string
@@ -32,51 +33,76 @@ const mostrarDropdown = ref(false)
 const busqueda = ref('')
 const bomberoSeleccionado = ref<Bombero | null>(null)
 
-const bomberos: Bombero[] = [
-  {
-    id: 1,
-    nombre: 'Jorge Daniel Aguilar Díaz',
-    rango: 'Subteniente',
-    departamento: 'Rescate',
-    estado: 'Crítico',
-    horasTrabajadas: 33,
-    horasRequeridas: 120,
-    porcentaje: 27.5,
-    faltantes: 87,
-    grupo: 'Oficiales',
-    colorEstado: 'red',
-  },
-  {
-    id: 2,
-    nombre: 'Laura Fernández Castro',
-    rango: 'Teniente',
-    departamento: 'Emergencias',
-    estado: 'Óptimo',
-    horasTrabajadas: 100,
-    horasRequeridas: 100,
-    porcentaje: 100,
-    faltantes: 0,
-    grupo: 'Oficiales',
-    colorEstado: 'green',
-  },
-  {
-    id: 3,
-    nombre: 'Ana García Morales',
-    rango: 'Teniente',
-    departamento: 'Emergencias',
-    estado: 'Regular',
-    horasTrabajadas: 85,
-    horasRequeridas: 100,
-    porcentaje: 85,
-    faltantes: 15,
-    grupo: 'Oficiales',
-    colorEstado: 'yellow',
-  },
-]
+const bomberos = computed(() => {
+  const rawBomberos = [
+    {
+      id: 1,
+      nombre: 'Jorge Daniel Aguilar Díaz',
+      rango: 'Subteniente',
+      departamento: 'Rescate',
+      horasTrabajadas: 33,
+      horasRequeridas: 120,
+      grupo: 'Oficiales',
+    },
+    {
+      id: 2,
+      nombre: 'Laura Fernández Castro',
+      rango: 'Teniente',
+      departamento: 'Emergencias',
+      horasTrabajadas: 100,
+      horasRequeridas: 100,
+      grupo: 'Oficiales',
+    },
+    {
+      id: 3,
+      nombre: 'Ana García Morales',
+      rango: 'Teniente',
+      departamento: 'Emergencias',
+      horasTrabajadas: 85,
+      horasRequeridas: 100,
+      grupo: 'Oficiales',
+    },
+    {
+      id: 4,
+      nombre: 'Cesar Junior Pezantes Silva',
+      rango: 'Comandante',
+      departamento: 'Emergencias',
+      horasTrabajadas: 30,
+      horasRequeridas: 120,
+      grupo: 'Oficiales',
+    },
+  ]
+
+  return rawBomberos.map(b => {
+    const porcentaje = Math.round((b.horasTrabajadas / b.horasRequeridas) * 100 * 10) / 10
+    const faltantes = b.horasRequeridas - b.horasTrabajadas
+    let estado: 'Crítico' | 'Óptimo' | 'Regular'
+    let colorEstado: string
+
+    if (porcentaje >= 100) {
+      estado = 'Óptimo'
+      colorEstado = 'green'
+    } else if (porcentaje >= 70) {
+      estado = 'Regular'
+      colorEstado = 'yellow'
+    } else {
+      estado = 'Crítico'
+      colorEstado = 'red'
+    }
+
+    return {
+      ...b,
+      porcentaje,
+      faltantes,
+      estado,
+      colorEstado
+    }
+  })
+})
 
 const resultadosBusqueda = computed(() => {
   if (!busqueda.value) return []
-  return bomberos.filter((b: Bombero) =>
+  return bomberos.value.filter((b: Bombero) =>
     b.nombre.toLowerCase().includes(busqueda.value.toLowerCase()) ||
     b.rango.toLowerCase().includes(busqueda.value.toLowerCase()) ||
     b.departamento.toLowerCase().includes(busqueda.value.toLowerCase())
@@ -88,17 +114,20 @@ function abrirModalBusqueda() {
   busqueda.value = ''
   bomberoSeleccionado.value = null
 }
+
 function cerrarModalBusqueda() {
   mostrarModalBusqueda.value = false
-  mostrarModalDetalle.value = false // Cierra también el detalle si estuviera abierto
+  mostrarModalDetalle.value = false
 }
+
 function seleccionarBombero(b: Bombero) {
   bomberoSeleccionado.value = b
   mostrarModalDetalle.value = true
 }
+
 function cerrarModalDetalle() {
   mostrarModalDetalle.value = false
-  mostrarModalBusqueda.value = false // Cierra también la búsqueda si estuviera abierta
+  mostrarModalBusqueda.value = false
 }
 
 function cerrarDropdown() {
@@ -112,17 +141,18 @@ const tabs = [
   { key: 'critico', label: 'critico' }
 ]
 
-const totalBomberos = computed(() => bomberos.length)
-const totalOptimo = computed(() => bomberos.filter(b => b.estado === 'Óptimo').length)
-const totalRegular = computed(() => bomberos.filter(b => b.estado === 'Regular').length)
-const totalCritico = computed(() => bomberos.filter(b => b.estado === 'Crítico').length)
+const totalBomberos = computed(() => bomberos.value.length)
+const totalOptimo = computed(() => bomberos.value.filter(b => b.estado === 'Óptimo').length)
+const totalRegular = computed(() => bomberos.value.filter(b => b.estado === 'Regular').length)
+const totalCritico = computed(() => bomberos.value.filter(b => b.estado === 'Crítico').length)
 
-const bomberosOptimo = computed(() => bomberos.filter(b => b.estado === 'Óptimo'))
-const bomberosRegular = computed(() => bomberos.filter(b => b.estado === 'Regular'))
-const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Crítico'))
+const bomberosOptimo = computed(() => bomberos.value.filter(b => b.estado === 'Óptimo'))
+const bomberosRegular = computed(() => bomberos.value.filter(b => b.estado === 'Regular'))
+const bomberosCritico = computed(() => bomberos.value.filter(b => b.estado === 'Crítico'))
 </script>
 
 <template>
+  <!-- El resto del template permanece igual -->
   <div class="min-h-screen bg-gray-200">
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
@@ -332,24 +362,24 @@ const bomberosCritico = computed(() => bomberos.filter(b => b.estado === 'Críti
       <br />
 
       <!-- Contenido de los tabs -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" v-if="activeTab === 'todos'">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4" v-if="activeTab === 'todos'">
         <template v-for="b in bomberos" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"
         v-else-if="activeTab === 'optimo'">
         <template v-for="b in bomberosOptimo" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"
         v-else-if="activeTab === 'regular'">
         <template v-for="b in bomberosRegular" :key="b.id">
           <BomberoCard :bombero="b" />
         </template>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4"
         v-else-if="activeTab === 'critico'">
         <template v-for="b in bomberosCritico" :key="b.id">
           <BomberoCard :bombero="b" />

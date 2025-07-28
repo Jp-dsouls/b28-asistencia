@@ -122,7 +122,7 @@ const handleImageError = (type: 'escudo' | 'logo') => {
   </div>
 
   <!-- Desktop: Layout horizontal completo -->
-  <div class="hidden lg:flex items-center gap-4">
+  <div class="hidden lg:flex items-center gap-2">
     <!-- Escudo B28 -->
     <div class="relative">
       <img v-if="!escudoError" :src="IMAGES.ESCUDO_B28" :alt="IMAGES.ALT_TEXTS.ESCUDO_B28" :class="[

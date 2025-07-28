@@ -60,7 +60,7 @@ defineProps<Props>()
     </div>
 
     <div class="flex items-center justify-between mb-2">
-      <span class="text-xs text-gray-600">Progreso</span>
+      <span class="text-xs text-gray-600">Progreso 1</span>
       <span :class="{
         'text-red-500': bombero.estado === 'Crítico',
         'text-green-500': bombero.estado === 'Óptimo',
@@ -126,7 +126,7 @@ defineProps<Props>()
         </div>
 
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm text-gray-600">Progreso</span>
+          <span class="text-sm text-gray-600">Progreso 2</span>
           <span :class="{
             'text-red-500': bombero.estado === 'Crítico',
             'text-green-500': bombero.estado === 'Óptimo',
@@ -186,7 +186,7 @@ defineProps<Props>()
       <span class="font-bold text-gray-900 ml-1">{{ bombero.horasRequeridas }}h</span>
     </div>
     <div class="mt-4 flex items-center justify-between">
-      <span class="text-gray-600 text-sm">Progreso</span>
+      <span class="text-gray-600 text-sm">Progreso 3</span>
       <span :class="{
         'text-red-500': bombero.estado === 'Crítico',
         'text-green-500': bombero.estado === 'Óptimo',
